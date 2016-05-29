@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="java,javac,编译器,ECJ,基础,动态编译," />
 
 
 
@@ -84,15 +84,36 @@
 
 
 
-<meta name="description" content="纸上得来终觉浅,绝知此事要躬行">
-<meta property="og:type" content="website">
-<meta property="og:title" content="唠叨 Notes">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="本文试图用通俗的语言从原理和实战上解决Java开发中常常遇到的问题：为什么同样的代码，在不同的机器上编译效果不一致？为什么相同的代码，在相同机器的不同IDE中编译效果不一致？为什么相同的代码，在相同机器上相同IDE中，不同的构建方法的编译结果不一致？
+本文并不保证：
+
+照着做就立马解决现有的编译出错问题—— 因为本文不是排错手册。
+你看完以后，就不会碰到编译出错的问题——光看文章通常解决不了问题，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java开发基础工具的使用(1)——编译与构建">
+<meta property="og:url" content="http://yoursite.com/2016/05/30/java-basics-compiler-and-build/index.html">
 <meta property="og:site_name" content="唠叨 Notes">
-<meta property="og:description" content="纸上得来终觉浅,绝知此事要躬行">
+<meta property="og:description" content="本文试图用通俗的语言从原理和实战上解决Java开发中常常遇到的问题：为什么同样的代码，在不同的机器上编译效果不一致？为什么相同的代码，在相同机器的不同IDE中编译效果不一致？为什么相同的代码，在相同机器上相同IDE中，不同的构建方法的编译结果不一致？
+本文并不保证：
+
+照着做就立马解决现有的编译出错问题—— 因为本文不是排错手册。
+你看完以后，就不会碰到编译出错的问题——光看文章通常解决不了问题，">
+<meta property="og:image" content="http://static.zybuluo.com/liufor/jzwggejykn0vpikelrihwd9a/image_1aju45bu3i613oiue01l5417j3m.png">
+<meta property="og:image" content="http://static.zybuluo.com/liufor/h2asibi0zkihdxbec2dtsyt6/image_1aju2v1atmee2b119j214ot16599.png">
+<meta property="og:image" content="http://static.zybuluo.com/liufor/no5groycj66ovsrwzmt9v6di/image_1ajs6hhht4p07mb27b7rj1tutm.png">
+<meta property="og:image" content="http://static.zybuluo.com/liufor/vo0oqps3oprzrpokxfppmoj3/image_1ajuk11ia13tvj91pl916dk1i9r13.png">
+<meta property="og:image" content="http://static.zybuluo.com/liufor/yoir1th9zr4d10c3y1m60fjy/image_1ajuna4slrvn1u3c1at215j116aj1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/liufor/jsr48hh3m0khmatafm2emmo3/image_1ajunat2bqi8t9j1cclb241jgi1t.png">
+<meta property="og:image" content="http://static.zybuluo.com/liufor/vo0oqps3oprzrpokxfppmoj3/image_1ajuk11ia13tvj91pl916dk1i9r13.png">
+<meta property="og:updated_time" content="2016-05-29T17:52:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="唠叨 Notes">
-<meta name="twitter:description" content="纸上得来终觉浅,绝知此事要躬行">
+<meta name="twitter:title" content="Java开发基础工具的使用(1)——编译与构建">
+<meta name="twitter:description" content="本文试图用通俗的语言从原理和实战上解决Java开发中常常遇到的问题：为什么同样的代码，在不同的机器上编译效果不一致？为什么相同的代码，在相同机器的不同IDE中编译效果不一致？为什么相同的代码，在相同机器上相同IDE中，不同的构建方法的编译结果不一致？
+本文并不保证：
+
+照着做就立马解决现有的编译出错问题—— 因为本文不是排错手册。
+你看完以后，就不会碰到编译出错的问题——光看文章通常解决不了问题，">
+<meta name="twitter:image" content="http://static.zybuluo.com/liufor/jzwggejykn0vpikelrihwd9a/image_1aju45bu3i613oiue01l5417j3m.png">
 
 
 
@@ -110,7 +131,7 @@
   };
 </script>
 
-  <title> 唠叨 Notes </title>
+  <title> Java开发基础工具的使用(1)——编译与构建 | 唠叨 Notes </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -131,9 +152,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -210,9 +229,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -232,10 +251,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/05/30/java-basics-compiler-and-build/" itemprop="url">
-                  Java开发基础工具的使用(1)——编译与构建
-                </a>
+                Java开发基础工具的使用(1)——编译与构建
               
             
           </h1>
@@ -291,9 +307,7 @@
       
 
       
-        
-          
-            <p>本文试图用通俗的语言从原理和实战上解决Java开发中常常遇到的问题：<br>为什么同样的代码，在不同的机器上编译效果不一致？<br>为什么相同的代码，在相同机器的不同IDE中编译效果不一致？<br>为什么相同的代码，在相同机器上相同IDE中，不同的构建方法的编译结果不一致？</p>
+        <p>本文试图用通俗的语言从原理和实战上解决Java开发中常常遇到的问题：<br>为什么同样的代码，在不同的机器上编译效果不一致？<br>为什么相同的代码，在相同机器的不同IDE中编译效果不一致？<br>为什么相同的代码，在相同机器上相同IDE中，不同的构建方法的编译结果不一致？</p>
 <p>本文并不保证：</p>
 <ol>
 <li>照着做就立马解决现有的编译出错问题—— 因为本文不是排错手册。</li>
@@ -644,161 +658,109 @@ Compliance options:
 <h4 id="pom-xml可能影响IDEA的配置"><a href="#pom-xml可能影响IDEA的配置" class="headerlink" title="pom.xml可能影响IDEA的配置"></a>pom.xml可能影响IDEA的配置</h4><p>IDEA 通过 IDEA plugin(Maven Integration)实现了对 Maven 的集成，Maven Integration 有一个隐藏的功能，可能会引起使用者的不适：<br>它会自动使 IDEA 的 <code>Language level</code> 和 <code>Target bytecode version</code> 和 pom.xml 保持一致，如果当你在IDEA中修改者两者后，却被莫名奇妙还原的话，你得修改 pom.xml 。</p>
 <h3 id="调用编译器API"><a href="#调用编译器API" class="headerlink" title="调用编译器API"></a>调用编译器API</h3><p>略。</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/23/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-23T12:41:35+08:00" content="2016-05-23">
-              2016-05-23
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/java/" rel="tag">#java</a>
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/23/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/23/hello-world/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
+            <a href="/tags/javac/" rel="tag">#javac</a>
           
-
+            <a href="/tags/编译器/" rel="tag">#编译器</a>
           
-
+            <a href="/tags/ECJ/" rel="tag">#ECJ</a>
           
+            <a href="/tags/基础/" rel="tag">#基础</a>
           
-             <span id="/2016/05/23/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
+            <a href="/tags/动态编译/" rel="tag">#动态编译</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/23/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/30/java-basics-compiler-and-build/"
+           data-title="Java开发基础工具的使用(1)——编译与构建" data-url="http://yoursite.com/2016/05/30/java-basics-compiler-and-build/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -818,8 +780,17 @@ Compliance options:
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -909,6 +880,17 @@ Compliance options:
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM-和-类文件"><span class="nav-number">1.</span> <span class="nav-text">JVM 和 类文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java平台的操作系统中立性"><span class="nav-number">1.1.</span> <span class="nav-text">Java平台的操作系统中立性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java平台的语言中立性"><span class="nav-number">1.2.</span> <span class="nav-text">Java平台的语言中立性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java编译器"><span class="nav-number">2.</span> <span class="nav-text">Java编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#javac-编译器"><span class="nav-number">2.1.</span> <span class="nav-text">javac 编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在代码中使用-javac"><span class="nav-number">2.1.1.</span> <span class="nav-text">在代码中使用 javac</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接调用-javac-入口Main方法"><span class="nav-number">2.1.2.</span> <span class="nav-text">直接调用 javac 入口Main方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ECJ-编译器"><span class="nav-number">2.2.</span> <span class="nav-text">ECJ 编译器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译时-source-、-target"><span class="nav-number">2.3.</span> <span class="nav-text">编译时 -source 、 -target</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#source-取值"><span class="nav-number">2.3.1.</span> <span class="nav-text">-source 取值</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#javac"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">javac</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ECJ"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">ECJ</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#target-取值"><span class="nav-number">2.3.2.</span> <span class="nav-text">-target 取值</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#javac-1"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">javac</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ECJ-1"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">ECJ</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在其他地方调用编译器"><span class="nav-number">3.</span> <span class="nav-text">在其他地方调用编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#in-Maven-amp-in-Maven-with-IntelliJ-IDEA"><span class="nav-number">3.1.</span> <span class="nav-text">in Maven & in Maven with IntelliJ IDEA</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#maven基础"><span class="nav-number">3.1.1.</span> <span class="nav-text">maven基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#maven本质"><span class="nav-number">3.1.2.</span> <span class="nav-text">maven本质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#我使用了哪个maven版本？"><span class="nav-number">3.1.3.</span> <span class="nav-text">我使用了哪个maven版本？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#终端"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">终端</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#IntelliJ-IDEA"><span class="nav-number">3.1.3.2.</span> <span class="nav-text">IntelliJ IDEA</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用哪个JRE启动的Maven？"><span class="nav-number">3.1.4.</span> <span class="nav-text">用哪个JRE启动的Maven？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Maven中的编译器"><span class="nav-number">3.1.5.</span> <span class="nav-text">Maven中的编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#启用javac"><span class="nav-number">3.1.5.1.</span> <span class="nav-text">启用javac</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#javac的fork模式"><span class="nav-number">3.1.5.1.1.</span> <span class="nav-text">javac的fork模式</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启用ECJ"><span class="nav-number">3.1.5.2.</span> <span class="nav-text">启用ECJ</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#名不副实的-compilerVersion-配置项"><span class="nav-number">3.1.5.3.</span> <span class="nav-text">名不副实的 compilerVersion 配置项</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置-source"><span class="nav-number">3.1.6.</span> <span class="nav-text">设置-source</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置-target"><span class="nav-number">3.1.7.</span> <span class="nav-text">设置-target</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#给编译器传递其他参数"><span class="nav-number">3.1.8.</span> <span class="nav-text">给编译器传递其他参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#in-IntelliJ-IDEA"><span class="nav-number">3.2.</span> <span class="nav-text">in IntelliJ IDEA</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选择编译器"><span class="nav-number">3.2.1.</span> <span class="nav-text">选择编译器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译器用的哪个版本？"><span class="nav-number">3.2.2.</span> <span class="nav-text">编译器用的哪个版本？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置-source-1"><span class="nav-number">3.2.3.</span> <span class="nav-text">设置-source</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置-target-1"><span class="nav-number">3.2.4.</span> <span class="nav-text">设置-target</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#给编译器传递其他参数-1"><span class="nav-number">3.2.5.</span> <span class="nav-text">给编译器传递其他参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pom-xml可能影响IDEA的配置"><span class="nav-number">3.2.6.</span> <span class="nav-text">pom.xml可能影响IDEA的配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调用编译器API"><span class="nav-number">3.3.</span> <span class="nav-text">调用编译器API</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -1005,6 +987,10 @@ Compliance options:
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
